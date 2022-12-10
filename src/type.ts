@@ -1,7 +1,7 @@
 /**
- * Option
+ * Try
  */
-export namespace MonadOption {
+export namespace MonadTry {
   export type Pass<T> = {
     _tag: 'pass'
     value: T
@@ -26,8 +26,8 @@ export namespace MonadOption {
     error,
   })
 
-  export type Option<E, T> = Pass<T> | Fail<E>
+  export type Try<E, T> = Pass<T> | Fail<E>
 
-  export const isPass = <T>(o: Option<never, T>): boolean => o._tag === 'pass'
-  export const isFail = <E>(o: Option<E, never>): boolean => o._tag === 'fail'
+  export const isPass = <T>(o: Try<never, T>): boolean => o._tag === 'pass'
+  export const isFail = <E>(o: Try<E, never>): boolean => o._tag === 'fail'
 }

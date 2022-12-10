@@ -53,13 +53,13 @@ describe('go test', () => {
 
 > Type
 
-- Option
+- Try
 
 ```ts
-import { MonadOption as O } from '../src/type'
+import { MonadTry as T } from '../src/type'
 describe('option test', () => {
   it('[TEST] option', () => {
-    const option: O.Option<null, string> = {
+    const option: T.Try<null, string> = {
       _tag: 'pass',
       value: 'hello world',
       error: null,
