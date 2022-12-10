@@ -10,7 +10,7 @@
     "build-watch": "npm run clean && babel -w ./src --out-dir lib --extensions \".ts,.tsx\"",
     "build-test": "npm run build && npm run test",
     "test": "jest --verbose --testTimeout=10000",
-    "release": "npm run build && NODE_ENV=\"test\" npx np --any-branch",
+    "release": "npm run test && npm run build && NODE_ENV=\"test\" npx np --any-branch",
     "pre-release": "npm run test && npm run build && npm publish"
   },
   "author": "",
