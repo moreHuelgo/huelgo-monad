@@ -9,6 +9,7 @@
     "build": "npm run clean && tsc && babel ./src --ignore */test --out-dir lib --extensions \".ts,.tsx\"",
     "build-watch": "npm run clean && babel -w ./src --out-dir lib --extensions \".ts,.tsx\"",
     "build-test": "npm run build && npm run test",
+    "test-watch": "jest --watch",
     "test": "jest --verbose --testTimeout=10000",
     "release": "npm run build && NODE_ENV=\"test\" npx np --any-branch",
     "pre-release": "npm run test && npm run build && npm publish"
