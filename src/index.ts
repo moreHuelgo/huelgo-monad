@@ -1,2 +1,2 @@
-export * from './go'
-export * from './type'
+export * from './pipe/index'
+export * from './type/index'

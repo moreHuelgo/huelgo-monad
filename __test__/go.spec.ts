@@ -1,4 +1,4 @@
-import { go, asyncGo } from '../src/go'
+import { go, asyncGo } from '../src/pipe/go'
 
 describe('go test', () => {
   it('[TEST] go', (done) => {

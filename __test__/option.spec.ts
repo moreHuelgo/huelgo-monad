@@ -1,4 +1,4 @@
-import { MonadTry as T } from '../src/type'
+import * as T from '../src/type/try'
 describe('option test', () => {
   it('[TEST] option', () => {
     const option: T.Try<null, string> = {
