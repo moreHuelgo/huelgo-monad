@@ -1,0 +1,14 @@
+/.vscode
+**/node_modules/**
+**/lib/**
+tsconfig.json
+.runtimeconfig.json
+package-lock.json
+tsconfig.json
+tslint.json
+.firebaserc
+.gitignore
+README.md
+readme.md
+firebase.json
+yarn.lock
