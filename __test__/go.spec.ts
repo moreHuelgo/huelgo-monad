@@ -1,4 +1,3 @@
-import { concat } from 'lodash'
 import { go, asyncGo } from '../src/go'
 
 describe('go test', () => {
