@@ -2,9 +2,9 @@
 
 ## Desc
 
-- 변수를 줄이자 !!
-- try-catch 를 없애자 !!
-- 부수효과를 줄이자 !!
+- No More Variables !!
+- No More Try-Catch !!
+- No More side effect !!
 
 ## Install
 
@@ -19,8 +19,6 @@ npm i huelgo-monad
 - 간단한 함수형 메서드입니다.
 
 ```ts
-import { go, asyncGo } from '../src/go'
-
 ///////////////////////////////////////// Go ////////////////////////////////////////
 describe('go test', () => {
   it('[TEST] go', (done) => {
