@@ -1,20 +1,27 @@
 # Huelgo-Monad
 
+## Desc
+
+- 변수를 줄이자 !!
+- try-catch 를 없애자 !!
+- 부수효과를 줄이자 !!
+
 ## Install
 
 ```
 npm i huelgo-monad
 ```
 
-## Desc
+## Go
 
-> Go
+### Go, AsyncGo, MixedGo
 
-- Go, AsyncGo
+- 간단한 함수형 메서드입니다.
 
 ```ts
 import { go, asyncGo } from '../src/go'
 
+///////////////////////////////////////// Go ////////////////////////////////////////
 describe('go test', () => {
   it('[TEST] go', (done) => {
     const str = go(
@@ -27,6 +34,7 @@ describe('go test', () => {
     done()
   })
 
+  ///////////////////////////////////////// AsyncGo ////////////////////////////////////////
   it('[TEST] async go', async () => {
     const addP1 = (num: number) => new Promise((res, rej) => res(num + 10))
     const minP1 = (num: number) => new Promise((res, rej) => res(num - 5))
@@ -48,10 +56,107 @@ describe('go test', () => {
     expect(value.isOk).toBe(false)
     expect(value.value).toBe(`15 is too low`)
   })
+
+  ///////////////////////////////////////// MixedGo ////////////////////////////////////////
+  it('[TEST] mixed go pass', async () => {
+    const mul = async (num) => num * 10
+
+    const passValue = await mixedGo(
+      10,
+      (num: number) => num + 10,
+      mul,
+      (num: number) => num + 20,
+      mul
+    )
+
+    expect(passValue.isOk).toBe(true)
+    expect(passValue.value).toBe(2200)
+  })
+
+  it('[TEST] mixed go fail', async () => {
+    const mul = async (num) => {
+      throw Error('err')
+    }
+
+    const failValue = await mixedGo(
+      10,
+      (num: number) => num + 10,
+      mul,
+      (num: number) => num + 20,
+      mul
+    )
+    expect(failValue.isOk).toBe(false)
+  })
 })
 ```
 
-> Type
+### ConditionGo, ConditionMixedGo
+
+- 유효성검사를 위한 함수형 메서드입니다
+
+```ts
+///////////////////////////////////////// ConditionGo ////////////////////////////////////////
+it('[TEST] condition Go Pass Case 1', (done) => {
+  const isTrue = conditionGo<string, string>(
+    'leedonggyu',
+    true,
+    { func: (_name) => _name.includes('lee'), error: 'not include lee' },
+    { func: (_name) => _name.includes('dong'), error: 'not include dong' },
+    { func: (_name) => _name.includes('gyu'), error: 'not include gyu' }
+  )
+  expect(isTrue.isOk).toBe(true)
+  done()
+})
+
+it('[TEST] condition Pass Case 2', (done) => {
+  const params = {
+    salonKey: 'salonKey',
+    employeeKey: 'employeeKey',
+    customerKey: 'customerKey',
+    eventKey: 'eventKey',
+    price: 0,
+  }
+
+  const isTrue = conditionGo<string, typeof params>(
+    params,
+    true,
+    { func: ({ salonKey }) => !!salonKey, error: 'not exites salonKey' },
+    { func: ({ employeeKey }) => !!employeeKey, error: 'not exites employeeKey' },
+    { func: ({ customerKey }) => !!customerKey, error: 'not exites customerKey' },
+    { func: ({ eventKey }) => !!eventKey, error: 'not exites eventKey' },
+    { func: ({ price }) => price >= 0, error: 'price is not -' }
+  )
+
+  expect(isTrue.isOk).toBe(true)
+  done()
+})
+
+it('[TEST] condition Fail Case 1', (done) => {
+  const params = {
+    salonKey: null,
+    employeeKey: 'employeeKey',
+    customerKey: 'customerKey',
+    eventKey: 'eventKey',
+    price: 0,
+  }
+
+  const isFail = conditionGo<string, typeof params>(
+    params,
+    true,
+    { func: ({ salonKey }) => !!salonKey, error: 'not exites salonKey' },
+    { func: ({ employeeKey }) => !!employeeKey, error: 'not exites employeeKey' },
+    { func: ({ customerKey }) => !!customerKey, error: 'not exites customerKey' },
+    { func: ({ eventKey }) => !!eventKey, error: 'not exites eventKey' },
+    { func: ({ price }) => price >= 0, error: 'price is not -' }
+  )
+
+  expect(isFail.isOk).toBe(false)
+  expect(isFail.error).toBe('not exites salonKey')
+  done()
+})
+```
+
+## Types
 
 - Try
 
