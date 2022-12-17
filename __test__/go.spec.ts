@@ -1,4 +1,4 @@
-import { asyncGo, go, mixedGo } from '../src/pipe/go'
+import { asyncGo, conditionGo, go, mixedGo } from '../src/pipe/go'
 
 describe('go test', () => {
   it('[TEST] go', (done) => {
@@ -62,5 +62,64 @@ describe('go test', () => {
       mul
     )
     expect(failValue.isOk).toBe(false)
+  })
+
+  it('[TEST] condition Go Pass Case 1', (done) => {
+    const isTrue = conditionGo<string, string>(
+      'leedonggyu',
+      true,
+      { func: (_name) => _name.includes('lee'), error: 'not include lee' },
+      { func: (_name) => _name.includes('dong'), error: 'not include dong' },
+      { func: (_name) => _name.includes('gyu'), error: 'not include gyu' }
+    )
+    expect(isTrue.isOk).toBe(true)
+    done()
+  })
+
+  it('[TEST] condition Pass Case 2', (done) => {
+    const params = {
+      salonKey: 'salonKey',
+      employeeKey: 'employeeKey',
+      customerKey: 'customerKey',
+      eventKey: 'eventKey',
+      price: 0,
+    }
+
+    const isTrue = conditionGo<string, typeof params>(
+      params,
+      true,
+      { func: ({ salonKey }) => !!salonKey, error: 'not exites salonKey' },
+      { func: ({ employeeKey }) => !!employeeKey, error: 'not exites employeeKey' },
+      { func: ({ customerKey }) => !!customerKey, error: 'not exites customerKey' },
+      { func: ({ eventKey }) => !!eventKey, error: 'not exites eventKey' },
+      { func: ({ price }) => price >= 0, error: 'price is not -' }
+    )
+
+    expect(isTrue.isOk).toBe(true)
+    done()
+  })
+
+  it('[TEST] condition Fail Case 1', (done) => {
+    const params = {
+      salonKey: null,
+      employeeKey: 'employeeKey',
+      customerKey: 'customerKey',
+      eventKey: 'eventKey',
+      price: 0,
+    }
+
+    const isFail = conditionGo<string, typeof params>(
+      params,
+      true,
+      { func: ({ salonKey }) => !!salonKey, error: 'not exites salonKey' },
+      { func: ({ employeeKey }) => !!employeeKey, error: 'not exites employeeKey' },
+      { func: ({ customerKey }) => !!customerKey, error: 'not exites customerKey' },
+      { func: ({ eventKey }) => !!eventKey, error: 'not exites eventKey' },
+      { func: ({ price }) => price >= 0, error: 'price is not -' }
+    )
+
+    expect(isFail.isOk).toBe(false)
+    expect(isFail.error).toBe('not exites salonKey')
+    done()
   })
 })
