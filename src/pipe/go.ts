@@ -66,6 +66,10 @@ interface ConditionParmas<E, T> {
   error: E
 }
 
+/**
+ * @param initParam Standard Parameter
+ * @param isCondition all pass condition
+ */
 export function conditionGo<E, T>(initParam: T, isCondition: boolean, ...conditions: ConditionParmas<E, T>[]): GoReturnParmas<E, T> {
   for (const { func, error } of conditions) {
     if (isCondition !== func(initParam)) {
