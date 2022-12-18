@@ -1,12 +1,16 @@
 {
   "name": "huelgo-monad",
   "version": "1.0.7",
-  "description": "",
+  "description": "Functional Programming Tools in Typescript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
     "lib/**/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moreHuelgo/huelgo-monad"
+  },
   "scripts": {
     "lint": "eslint 'src/**/*.ts'",
     "clean": "rimraf -rf lib && mkdirp lib",

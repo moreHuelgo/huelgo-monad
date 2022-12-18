@@ -16,159 +16,159 @@ npm i huelgo-monad
 
 ### Go, AsyncGo, MixedGo
 
-- 간단한 함수형 메서드입니다.
+- Simple Functional Method
+
+> go
 
 ```ts
 ///////////////////////////////////////// Go ////////////////////////////////////////
-describe('go test', () => {
-  it('[TEST] go', (done) => {
-    const str = go(
-      'leedonggyu',
-      (str: string) => str.replace('e', 'K'),
-      (str: string) => str.substring(0, 3)
-    )
 
-    expect(str).toBe('lKe')
-    done()
-  })
+export const go = <T>(initParam: T, ...fns): T => {
+  for (const fn of fns) initParam = fn(initParam)
+  return initParam
+}
 
-  ///////////////////////////////////////// AsyncGo ////////////////////////////////////////
-  it('[TEST] async go', async () => {
-    const addP1 = (num: number) => new Promise((res, rej) => res(num + 10))
-    const minP1 = (num: number) => new Promise((res, rej) => res(num - 5))
-    const mulP1 = (num: number) => new Promise((res, rej) => res(num * 100))
+// Example
+const str = go(
+  'leedonggyu',
+  (str: string) => str.replace('e', 'K'),
+  (str: string) => str.substring(0, 3)
+)
+```
 
-    const value = await asyncGo(10, addP1, minP1, mulP1)
+> asyncGo
 
-    expect(value.isOk).toBe(true)
-    expect(value.value).toBe(1500)
-  })
+```ts
+export const asyncGo = async <T>(initParams: T, ...promiseFns): Promise<GoReturnParmas<string, T>> => {
+  try {
+    for (const promiseFn of promiseFns) initParams = await promiseFn(initParams)
+    return {
+      isOk: true,
+      value: initParams,
+    }
+  } catch (e) {
+    return {
+      isOk: false,
+      value: e,
+    }
+  }
+}
 
-  it('[TEST] async go fail', async () => {
-    const addP1 = (num: number) => new Promise((res, rej) => res(num + 10))
-    const minP1 = (num: number) => new Promise((res, rej) => res(num - 5))
-    const mulP1 = (num: number) => new Promise((res, rej) => rej(`${num} is too low`))
+// Example
+const addP1 = (num: number) => new Promise((res, rej) => res(num + 10))
+const minP1 = (num: number) => new Promise((res, rej) => res(num - 5))
+const mulP1 = (num: number) => new Promise((res, rej) => rej(`${num} is too low`))
 
-    const value = await asyncGo(10, addP1, minP1, mulP1)
+const value = await asyncGo(10, addP1, minP1, mulP1)
 
-    expect(value.isOk).toBe(false)
-    expect(value.value).toBe(`15 is too low`)
-  })
+expect(value.isOk).toBe(false)
+expect(value.value).toBe(`15 is too low`)
+```
 
-  ///////////////////////////////////////// MixedGo ////////////////////////////////////////
-  it('[TEST] mixed go pass', async () => {
-    const mul = async (num) => num * 10
+> mixedGo
 
-    const passValue = await mixedGo(
-      10,
-      (num: number) => num + 10,
-      mul,
-      (num: number) => num + 20,
-      mul
-    )
+```ts
+export const mixedGo = async <T>(initParams: T, ...funcs): Promise<GoReturnParmas<string, T>> => {
+  try {
+    for (const func of funcs) {
+      if (isPromise(func)) {
+        initParams = await func(initParams)
+        continue
+      }
 
-    expect(passValue.isOk).toBe(true)
-    expect(passValue.value).toBe(2200)
-  })
-
-  it('[TEST] mixed go fail', async () => {
-    const mul = async (num) => {
-      throw Error('err')
+      initParams = func(initParams)
     }
 
-    const failValue = await mixedGo(
-      10,
-      (num: number) => num + 10,
-      mul,
-      (num: number) => num + 20,
-      mul
-    )
-    expect(failValue.isOk).toBe(false)
-  })
-})
+    return {
+      isOk: true,
+      value: initParams,
+    }
+  } catch (e) {
+    return {
+      isOk: false,
+      value: e,
+    }
+  }
+}
+
+// Example
+const mul = async (num) => num \* 10
+const passValue = await mixedGo(
+  10,
+  (num: number) => num + 10,
+  mul,
+  (num: number) => num + 20,
+  mul
+)
 ```
 
 ### ConditionGo, ConditionMixedGo
 
-- 유효성검사를 위한 함수형 메서드입니다
+- validation Functional Method
+
+> conditionGo
 
 ```ts
-///////////////////////////////////////// ConditionGo ////////////////////////////////////////
-it('[TEST] condition Go Pass Case 1', (done) => {
-  const isTrue = conditionGo<string, string>(
-    'leedonggyu',
-    true,
-    { func: (_name) => _name.includes('lee'), error: 'not include lee' },
-    { func: (_name) => _name.includes('dong'), error: 'not include dong' },
-    { func: (_name) => _name.includes('gyu'), error: 'not include gyu' }
-  )
-  expect(isTrue.isOk).toBe(true)
-  done()
-})
-
-it('[TEST] condition Pass Case 2', (done) => {
-  const params = {
-    salonKey: 'salonKey',
-    employeeKey: 'employeeKey',
-    customerKey: 'customerKey',
-    eventKey: 'eventKey',
-    price: 0,
+export function conditionGo<E, T>(initParam: T, isCondition: boolean, ...conditions: ConditionParmas<E, T>[]): GoReturnParmas<E, T> {
+  for (const { func, error } of conditions) {
+    if (isCondition !== func(initParam)) {
+      return {
+        isOk: false,
+        error,
+      }
+    }
   }
 
-  const isTrue = conditionGo<string, typeof params>(
-    params,
-    true,
-    { func: ({ salonKey }) => !!salonKey, error: 'not exites salonKey' },
-    { func: ({ employeeKey }) => !!employeeKey, error: 'not exites employeeKey' },
-    { func: ({ customerKey }) => !!customerKey, error: 'not exites customerKey' },
-    { func: ({ eventKey }) => !!eventKey, error: 'not exites eventKey' },
-    { func: ({ price }) => price >= 0, error: 'price is not -' }
-  )
-
-  expect(isTrue.isOk).toBe(true)
-  done()
-})
-
-it('[TEST] condition Fail Case 1', (done) => {
-  const params = {
-    salonKey: null,
-    employeeKey: 'employeeKey',
-    customerKey: 'customerKey',
-    eventKey: 'eventKey',
-    price: 0,
+  return {
+    isOk: true,
   }
+}
 
-  const isFail = conditionGo<string, typeof params>(
-    params,
-    true,
-    { func: ({ salonKey }) => !!salonKey, error: 'not exites salonKey' },
-    { func: ({ employeeKey }) => !!employeeKey, error: 'not exites employeeKey' },
-    { func: ({ customerKey }) => !!customerKey, error: 'not exites customerKey' },
-    { func: ({ eventKey }) => !!eventKey, error: 'not exites eventKey' },
-    { func: ({ price }) => price >= 0, error: 'price is not -' }
-  )
+// Example
+const params = {
+  salonKey: 'salonKey',
+  employeeKey: 'employeeKey',
+  customerKey: 'customerKey',
+  eventKey: 'eventKey',
+  price: 0,
+}
 
-  expect(isFail.isOk).toBe(false)
-  expect(isFail.error).toBe('not exites salonKey')
-  done()
-})
+const isTrue = conditionGo<string, typeof params>(
+  params,
+  true,
+  { func: ({ salonKey }) => !!salonKey, error: 'not exites salonKey' },
+  { func: ({ employeeKey }) => !!employeeKey, error: 'not exites employeeKey' },
+  { func: ({ customerKey }) => !!customerKey, error: 'not exites customerKey' },
+  { func: ({ eventKey }) => !!eventKey, error: 'not exites eventKey' },
+  { func: ({ price }) => price >= 0, error: 'price is not -' }
+)
 ```
 
 ## Types
 
+- help use Functional Programming well
+
 - Try
 
 ```ts
-import { MonadTry as T } from '../src/type'
-describe('option test', () => {
-  it('[TEST] option', () => {
-    const option: T.Try<null, string> = {
-      _tag: 'pass',
-      value: 'hello world',
-      error: null,
-    }
+type Pass<T> = {
+  _tag: 'pass'
+  value: T
+  error: null
+}
 
-    expect(option._tag).toBe('pass')
-  })
-})
+type Fail<E> = {
+  _tag: 'fail'
+  value: null
+  error: E
+}
+
+type Try<E, T> = Pass<T> | Fail<E>
+
+// Example
+const option: T.Try<null, string> = {
+  _tag: 'pass',
+  value: 'hello world',
+  error: null,
+}
 ```
