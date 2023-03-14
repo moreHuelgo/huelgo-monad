@@ -1,10 +1,10 @@
-export type Pass<T> = {
+type Pass<T> = {
   _tag: 'pass'
   value: T
   error: null
 }
 
-export type Fail<E> = {
+type Fail<E> = {
   _tag: 'fail'
   value: null
   error: E
@@ -25,8 +25,8 @@ export const failed = <E>(error: E): Fail<E> => ({
 export type Try<E, T> = Pass<T> | Fail<E>
 
 // CastringTry
-export const castTry = <E, T>(value: T, error: E, errConditionFn: (v: T) => boolean): Try<E, T> => {
-  if (errConditionFn(value)) {
+export const castTry = <E, T>(value: T, error: E, conditionFn: (v: T) => boolean): Try<E, T> => {
+  if (conditionFn(value)) {
     return passed(value)
   }
 
