@@ -6,9 +6,11 @@ interface GoReturnParmas<E, T> {
 const isPromise = (fn) => fn?.constructor?.name === 'AsyncFunction'
 
 /////////////////////////////////////////////////// go, asyncGo, mixedGo ////////////////////////////////////////
+
 /**
- * 동기식 형태 함수형 프로그래밍
- * go
+ * @desc 앞으로 당당히 걸어가자
+ * @param {initParam} initParam 초기값
+ * @param {...fns} ...fns 조건 함수 들
  */
 export const go = <T>(initParam: T, ...fns): T => {
   for (const fn of fns) initParam = fn(initParam)
@@ -16,8 +18,9 @@ export const go = <T>(initParam: T, ...fns): T => {
 }
 
 /**
- * 비동기식 형태 함수형 프로그래밍
- * asyncGo
+ * @desc 힘들지만 앞으로 당당히 걸어가자
+ * @param {initParams} initParams 초기값
+ * @param {...fns} ...fns 조건 함수 들
  */
 export const asyncGo = async <T>(initParams: T, ...promiseFns): Promise<GoReturnParmas<string, T>> => {
   try {
@@ -35,7 +38,9 @@ export const asyncGo = async <T>(initParams: T, ...promiseFns): Promise<GoReturn
 }
 
 /**
- * 동기 + 비동시기 형태 함수형 프로그래밍
+ * @desc 복잡하지만 앞으로 당당히 걸어가자
+ * @param {initParams} initParams 초기값
+ * @param {...fns} ...fns 조건 함수 들
  */
 export const mixedGo = async <T>(initParams: T, ...funcs): Promise<GoReturnParmas<string, T>> => {
   try {
@@ -67,8 +72,10 @@ interface ConditionParmas<E, T> {
 }
 
 /**
- * @param initParam Standard Parameter
- * @param isCondition all pass condition
+ * @desc 조건을 이겨내보자
+ * @param {initParam} initParam 초깃값
+ * @param {isCondition} isCondition 조건값
+ * @param {conditions} conditions 조건함수들
  */
 export function conditionGo<E, T>(initParam: T, isCondition: boolean, ...conditions: ConditionParmas<E, T>[]): GoReturnParmas<E, T> {
   for (const { func, error } of conditions) {
@@ -85,6 +92,12 @@ export function conditionGo<E, T>(initParam: T, isCondition: boolean, ...conditi
   }
 }
 
+/**
+ * @desc 힘든조건도 이겨내보자
+ * @param {initParams} initParams 초깃값
+ * @param {isCondition} isCondition 조건값
+ * @param {condition} condition 조건함수들
+ */
 export async function conditionMixedGo<E, T>(
   initParams: T,
   isCondition: boolean,
