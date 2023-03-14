@@ -8,7 +8,7 @@ type None = {
 }
 
 /**
- * @desc 성공 및 실패 여부만 나타앰
+ * @desc 성공이냐? 실패냐? 그것이 문제로다
  * @type {Some<T>} 성공
  * @type {None} 실패
  */

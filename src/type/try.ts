@@ -11,7 +11,7 @@ type Fail<E> = {
 }
 
 /**
- * @desc 성공 및 실패의 대한 상세여부를 나타냄
+ * @desc 왜 실패했니? 중요한건 과정이야
  * @type {Pass<T>} 성공
  * @type {Fail<E>} 실패
  */
