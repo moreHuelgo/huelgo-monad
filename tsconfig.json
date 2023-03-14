@@ -7,12 +7,17 @@
     "declaration": true,
     "noImplicitReturns": true,
     "sourceMap": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "noUnusedLocals": true,
+    "paths": {
+      "@src/*": ["src/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "compileOnSave": true
 }
