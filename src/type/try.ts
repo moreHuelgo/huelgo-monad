@@ -10,6 +10,13 @@ type Fail<E> = {
   error: E
 }
 
+/**
+ * @desc 성공 및 실패의 대한 상세여부를 나타냄
+ * @type {Pass<T>} 성공
+ * @type {Fail<E>} 실패
+ */
+export type Try<E, T> = Pass<T> | Fail<E>
+
 export const passed = <T>(value: T): Pass<T> => ({
   _tag: 'pass',
   value,
@@ -21,8 +28,6 @@ export const failed = <E>(error: E): Fail<E> => ({
   value: null,
   error,
 })
-
-export type Try<E, T> = Pass<T> | Fail<E>
 
 // CastringTry
 export const castTry = <E, T>(value: T, error: E, conditionFn: (v: T) => boolean): Try<E, T> => {

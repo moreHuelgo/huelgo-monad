@@ -7,6 +7,11 @@ type None = {
   _tag: 'none'
 }
 
+/**
+ * @desc 성공 및 실패 여부만 나타앰
+ * @type {Some<T>} 성공
+ * @type {None} 실패
+ */
 export type Option<T> = Some<T> | None
 
 export const some = <T>(value: T): Some<T> => ({
