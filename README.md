@@ -214,6 +214,24 @@ export async function conditionMixedGo<E, T>(
 }
 ```
 
+## Flow
+
+> flow
+
+```ts
+export function flow<T, K>(p: T, ...fns: ((p: T) => any)[]): K {
+  return fns.reduce((acc, fn) => fn(acc), p) as K
+}
+```
+
+> asyncFlow
+
+- Todo
+
+> mixedFlow
+
+- Todo
+
 ## Type
 
 - FP를 사용할때 필요한 타입을 정의합니다.
