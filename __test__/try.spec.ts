@@ -31,7 +31,6 @@ describe('try test', () => {
 
   it('castring pass', (done) => {
     const num = castTry(10, null, (num) => num === 10)
-    console.log(num)
     expect(isPass(num)).toBe(true)
     done()
   })

@@ -17,7 +17,9 @@ describe('family', () => {
       { fn: (v) => typeof v === 'boolean', idx: 2 }
     )
 
-    console.log(spreadList)
+    expect(spreadList.length).toBe(3)
+    expect(spreadList[0].length).toBe(3)
+    expect(spreadList[1].length).toBe(3)
 
     done()
   })
