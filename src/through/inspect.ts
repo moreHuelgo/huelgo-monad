@@ -7,10 +7,10 @@ interface fallThroughParams<T, E> {
 
 /**
  * @desc 모든 함수들의대해서 검증한 후 결과값을 리턴합니다.
- * @returns {failReasons} 실패 이유들
- * @returns {totalCount} 전체 시도 함수 개수
- * @returns {successCount} 성공 함수 개수
- * @returns {failCount} 실패 함수 개수
+ * @returns {failReasons} failReasons 실패 이유들
+ * @returns {totalCount} totalCount 전체 시도 함수 개수
+ * @returns {successCount} successCount 성공 함수 개수
+ * @returns {failCount} failCount 실패 함수 개수
  */
 export function fallThrough<A, E>(
   { value }: fallThroughParams<A, E>,
@@ -104,6 +104,9 @@ interface breakThroughParams<T, E> {
 
 /**
  * @desc 중간에 에러 발생 시 해당 에러를 반한홥니다
+ * @returns {failReasons} failReason 실패 이유
+ * @returns {totalCount} totalCount 전체 시도 함수 개수
+ * @returns {failIndex} failIndex 실패 함수 순서
  */
 export function breakThrough<A, E>({ value }: breakThroughParams<A, E>, fn1?: (value: A) => E): E
 export function breakThrough<A, E>({ value }: breakThroughParams<A, E>, fn1?: (value: A) => E, fn2?: (value: A) => E): E
