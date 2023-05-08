@@ -1,6 +1,6 @@
 {
   "name": "huelgo-monad",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Functional Programming Tools in Typescript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
