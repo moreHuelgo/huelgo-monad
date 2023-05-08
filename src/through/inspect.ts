@@ -105,62 +105,73 @@ interface breakThroughParams<T, E> {
 /**
  * @desc 중간에 에러 발생 시 해당 에러를 반한홥니다
  */
-export function breakThrough<A, E>(breakParams: breakThroughParams<A, E>, fn1?: (a: A) => E): E
-export function breakThrough<A, E>(breakParams: breakThroughParams<A, E>, fn1?: (a: A) => E, fn2?: (b: A) => E): E
-export function breakThrough<A, E>(breakParams: breakThroughParams<A, E>, fn1?: (a: A) => E, fn2?: (b: A) => E, fn3?: (c: A) => E): E
+export function breakThrough<A, E>({ value }: breakThroughParams<A, E>, fn1?: (value: A) => E): E
+export function breakThrough<A, E>({ value }: breakThroughParams<A, E>, fn1?: (value: A) => E, fn2?: (value: A) => E): E
+export function breakThrough<A, E>({ value }: breakThroughParams<A, E>, fn1?: (value: A) => E, fn2?: (value: A) => E, fn3?: (value: A) => E): E
 export function breakThrough<A, E>(
-  breakParams: breakThroughParams<A, E>,
-  fn1?: (a: A) => E,
-  fn2?: (b: A) => E,
-  fn3?: (c: A) => E,
-  fn4?: (d: A) => E
-): E
+  { value }: breakThroughParams<A, E>,
+  fn1?: (value: A) => E,
+  fn2?: (value: A) => E,
+  fn3?: (value: A) => E,
+  fn4?: (value: A) => E
+): { failReason: E; totalCount: number; failIndex: number }
 export function breakThrough<A, E>(
-  breakParams: breakThroughParams<A, E>,
-  fn1?: (a: A) => E,
-  fn2?: (b: A) => E,
-  fn3?: (c: A) => E,
-  fn4?: (d: A) => E,
-  fn5?: (e: A) => E
-): E
+  { value }: breakThroughParams<A, E>,
+  fn1?: (value: A) => E,
+  fn2?: (value: A) => E,
+  fn3?: (value: A) => E,
+  fn4?: (value: A) => E,
+  fn5?: (value: A) => E
+): { failReason: E; totalCount: number; failIndex: number }
 export function breakThrough<A, E>(
-  breakParams: breakThroughParams<A, E>,
-  fn1?: (a: A) => E,
-  fn2?: (b: A) => E,
-  fn3?: (c: A) => E,
-  fn4?: (d: A) => E,
-  fn5?: (e: A) => E,
-  fn6?: (f: A) => E
-): E
+  { value }: breakThroughParams<A, E>,
+  fn1?: (value: A) => E,
+  fn2?: (value: A) => E,
+  fn3?: (value: A) => E,
+  fn4?: (value: A) => E,
+  fn5?: (value: A) => E,
+  fn6?: (value: A) => E
+): { failReason: E; totalCount: number; failIndex: number }
 export function breakThrough<A, E>(
-  breakParams: breakThroughParams<A, E>,
-  fn1?: (a: A) => E,
-  fn2?: (b: A) => E,
-  fn3?: (c: A) => E,
-  fn4?: (d: A) => E,
-  fn5?: (e: A) => E,
-  fn6?: (f: A) => E,
-  fn7?: (g: A) => E
-): E
+  { value }: breakThroughParams<A, E>,
+  fn1?: (value: A) => E,
+  fn2?: (value: A) => E,
+  fn3?: (value: A) => E,
+  fn4?: (value: A) => E,
+  fn5?: (value: A) => E,
+  fn6?: (value: A) => E,
+  fn7?: (value: A) => E
+): { failReason: E; totalCount: number; failIndex: number }
 export function breakThrough<A, E>(
-  breakParams: breakThroughParams<A, E>,
-  fn1?: (a: A) => E,
-  fn2?: (b: A) => E,
-  fn3?: (c: A) => E,
-  fn4?: (d: A) => E,
-  fn5?: (e: A) => E,
-  fn6?: (f: A) => E,
-  fn7?: (g: A) => E,
-  fn8?: (h: A) => E
-): E {
-  const { value, isErrorCond } = breakParams
+  { value, isErrorCond }: breakThroughParams<A, E>,
+  fn1?: (value: A) => E,
+  fn2?: (value: A) => E,
+  fn3?: (value: A) => E,
+  fn4?: (value: A) => E,
+  fn5?: (value: A) => E,
+  fn6?: (value: A) => E,
+  fn7?: (value: A) => E,
+  fn8?: (value: A) => E
+): { failReason: E; totalCount: number; failIndex: number } {
+  let [totalCount, failIndex] = [0, 0]
+  const fns = [fn1, fn2, fn3, fn4, fn5, fn6, fn7, fn8].filter((it) => it)
+  totalCount = fns.length
 
-  for (const fn of [fn1, fn2, fn3, fn4, fn5, fn6, fn7, fn8].filter((it) => it)) {
+  for (const fn of fns) {
+    failIndex++
     const result = fn(value)
     if (isErrorCond(result)) {
-      return result
+      return {
+        failReason: result,
+        totalCount,
+        failIndex,
+      }
     }
   }
 
-  return null
+  return {
+    failReason: null,
+    totalCount,
+    failIndex: null,
+  }
 }
